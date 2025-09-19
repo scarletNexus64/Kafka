@@ -1,0 +1,58 @@
+kafka:
+  bootstrap_servers: "localhost:9092"
+  topics:
+    - "cdc.public.categories"
+    - "cdc.public.products"
+    - "cdc.public.users"
+    - "cdc.public.orders"
+  group_id: "cdc_consumer"
+  auto_offset_reset: "earliest"
+  enable_auto_commit: false
+  session_timeout_ms: 30000
+  heartbeat_interval_ms: 10000
+  max_poll_interval_ms: 300000
+  batch_size: 100
+  batch_timeout_ms: 1000
+  retry:
+    max_retries: 3
+    backoff_ms: 1000
+    max_backoff_ms: 30000
+
+postgres:
+  host: "localhost"
+  port: 5432
+  database: "target_db"
+  user: "postgres"
+  password: "postgres"
+  min_connections: 1
+  max_connections: 10
+  connect_timeout: 10
+  continue_on_error: true
+  batch:
+    size: 100
+    timeout_ms: 1000
+  retry:
+    max_retries: 3
+    backoff_ms: 1000
+    max_backoff_ms: 30000
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/cdc.log"
+
+metrics:
+  enabled: true
+  port: 8080
+  path: "/metrics"
+
+processing:
+  max_workers: 4
+  queue_size: 1000
+  shutdown_timeout: 30
+
+error_handling:
+  max_consecutive_errors: 10
+  error_reset_interval: 60
+  backoff_base: 2
+  max_backoff: 300
